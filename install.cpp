@@ -39,6 +39,7 @@
 
 #include "libs/CarbonExtras/ZipSig.h"
 #include "libs/CarbonExtras/Settings.h"
+#include "cutils/properties.h"
 
 extern RecoveryUI* ui;
 
@@ -265,6 +266,8 @@ mdtp_update()
 static int
 really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
 {
+    int ret = 0;
+
     ui->SetBackground(RecoveryUI::INSTALLING_UPDATE);
     ui->Print("Finding update package...\n");
     // Give verification half the progress bar...
@@ -318,6 +321,8 @@ really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
     }
     LOGI("%d key(s) loaded from %s\n", numKeys, PUBLIC_KEYS_FILE);
 
+    set_perf_mode(true);
+
     ui->Print("Verifying update package...\n");
 
     int err;
@@ -342,7 +347,8 @@ really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
         if (ZipSetting != 0) {
             sysReleaseMap(&map);
             LOGE("\nIf you want to install untrusted packages, please\ndisable signature verification in Settings\n");
-            return INSTALL_CORRUPT;
+            ret =  INSTALL_CORRUPT;
+            goto out;
         } else {
             LOGI("\nWe couldn't verify the package signature, but you have\ndisabled signature verification in Settings. Please note that\nthis package is untrusted and will be installed anyway.\n");
         }
@@ -355,14 +361,15 @@ really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
     if (err != 0) {
         LOGE("Can't open %s\n(%s)\n", path, err != -1 ? strerror(err) : "bad");
         sysReleaseMap(&map);
-        return INSTALL_CORRUPT;
+        ret = INSTALL_CORRUPT;
+        goto out;
     }
 
     /* Verify and install the contents of the package.
      */
     ui->Print("Installing update...\n");
     ui->SetEnableReboot(false);
-    int result = try_update_binary(path, &zip, wipe_cache);
+    ret = try_update_binary(path, &zip, wipe_cache);
     ui->SetEnableReboot(true);
     ui->Print("\n");
 
@@ -370,7 +377,7 @@ really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
 
 #ifdef USE_MDTP
     /* If MDTP update failed, return an error such that recovery will not finish. */
-    if (result == INSTALL_SUCCESS) {
+    if (ret == INSTALL_SUCCESS) {
         if (!mdtp_update()) {
             ui->Print("Unable to verify integrity of /system for MDTP, update aborted.\n");
             return INSTALL_ERROR;
@@ -379,7 +386,9 @@ really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
     }
 #endif /* USE_MDTP */
 
-    return result;
+out:
+    set_perf_mode(false);
+    return ret;
 }
 
 int
@@ -408,4 +417,9 @@ install_package(const char* path, bool* wipe_cache, const char* install_file,
         fclose(install_log);
     }
     return result;
+}
+
+void
+set_perf_mode(bool enable) {
+    property_set("recovery.perf.mode", enable ? "1" : "0");
 }
