@@ -84,6 +84,12 @@ class DefaultDevice : public Device {
               case KEY_VOLUMEDOWN:
               case KEY_MENU:
                 return kHighlightDown;
+		
+	      case KEY_J:
+		return kScrollDown;
+		
+	      case KEY_K:
+		return kScrollUp;
 
               case KEY_LEFTSHIFT:
               case KEY_UP:

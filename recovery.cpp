@@ -570,85 +570,91 @@ prepend_title(const char* const* headers) {
 
 int
 get_menu_selection(const char* const * headers, const char* const * items,
-                   int menu_only, int initial_selection, Device* device) {
-    // throw away keys pressed previously, so user doesn't
-    // accidentally trigger menu items.
-    ui->FlushKeys();
-
-    // Count items to detect valid values for absolute selection
-    int item_count = 0;
-    while (items[item_count] != NULL)
-        ++item_count;
-
-    ui->StartMenu(headers, items, initial_selection);
-    int selected = initial_selection;
-    int chosen_item = -1;
-
-    while (chosen_item < 0 && chosen_item != Device::kGoBack && chosen_item != Device::kRefresh) {
-        int key = ui->WaitKey();
-        int visible = ui->IsTextVisible();
-
-        if (key == -1) {   // ui_wait_key() timed out
-            if (ui->WasTextEverVisible()) {
-                continue;
-            } else {
-                LOGI("timed out waiting for key input; rebooting.\n");
-                ui->EndMenu();
-                return 0; // XXX fixme
-            }
-        } else if (key == -2) { // we are returning from ui_cancel_wait_key(): no action
-            return Device::kNoAction;
-        }
-        else if (key == -6) {
-            return Device::kRefresh;
-        }
-
-        int action = device->HandleMenuKey(key, visible);
-
-        if (action >= 0) {
-            if ((action & ~KEY_FLAG_ABS) >= item_count) {
-                action = Device::kNoAction;
-            }
-            else {
-                // Absolute selection.  Update selected item and give some
-                // feedback in the UI by selecting the item for a short time.
-                selected = action & ~KEY_FLAG_ABS;
-                action = Device::kInvokeItem;
-                selected = ui->SelectMenu(selected, true);
-                usleep(50*1000);
-            }
-        }
-
-        if (action < 0) {
-            switch (action) {
-                case Device::kHighlightUp:
-                    --selected;
-                    selected = ui->SelectMenu(selected);
-                    break;
-                case Device::kHighlightDown:
-                    ++selected;
-                    selected = ui->SelectMenu(selected);
-                    break;
-                case Device::kInvokeItem:
-                    chosen_item = selected;
-                    break;
-                case Device::kNoAction:
-                    break;
-                case Device::kGoBack:
-                    chosen_item = Device::kGoBack;
-                    break;
-                case Device::kRefresh:
-                    chosen_item = Device::kRefresh;
-                    break;
-            }
-        } else if (!menu_only) {
-            chosen_item = action;
-        }
+		   int menu_only, int initial_selection, Device* device) {
+  // throw away keys pressed previously, so user doesn't
+  // accidentally trigger menu items.
+  ui->FlushKeys();
+  
+  // Count items to detect valid values for absolute selection
+  int item_count = 0;
+  while (items[item_count] != NULL)
+    ++item_count;
+  
+  ui->StartMenu(headers, items, initial_selection);
+  int selected = initial_selection;
+  int chosen_item = -1;
+  
+  while (chosen_item < 0 && chosen_item != Device::kGoBack && chosen_item != Device::kRefresh) {
+    int key = ui->WaitKey();
+    int visible = ui->IsTextVisible();
+    
+    if (key == -1) {   // ui_wait_key() timed out
+      if (ui->WasTextEverVisible()) {
+	continue;
+      } else {
+	LOGI("timed out waiting for key input; rebooting.\n");
+	ui->EndMenu();
+	return 0; // XXX fixme
+      }
+    } else if (key == -2) { // we are returning from ui_cancel_wait_key(): no action
+      return Device::kNoAction;
     }
-
-    ui->EndMenu();
-    return chosen_item;
-}
+    else if (key == -6) {
+      return Device::kRefresh;
+    }
+    
+    int action = device->HandleMenuKey(key, visible);
+    
+    if (action >= 0) {
+      if ((action & ~KEY_FLAG_ABS) >= item_count) {
+	action = Device::kNoAction;
+      }
+      else {
+	// Absolute selection.  Update selected item and give some
+	// feedback in the UI by selecting the item for a short time.
+	selected = action & ~KEY_FLAG_ABS;
+	action = Device::kInvokeItem;
+	selected = ui->SelectMenu(selected, true);
+	usleep(50*1000);
+      }
+    }
+    
+    if (action < 0) {
+      switch (action) {
+	case Device::kHighlightUp:
+	  --selected;
+	  selected = ui->SelectMenu(selected);
+	  break;
+	case Device::kHighlightDown:
+	  ++selected;
+	  selected = ui->SelectMenu(selected);
+	  break;
+	case Device::kScrollUp:
+	  selected = ui->ScrollMenu(selected, 0);
+	  break;
+	case Device::kScrollDown:
+	  selected = ui->ScrollMenu(selected, 1);
+	  break;
+	case Device::kInvokeItem:
+	  chosen_item = selected;
+	  break;
+	case Device::kNoAction:
+	  break;
+	case Device::kGoBack:
+	  chosen_item = Device::kGoBack;
+	  break;
+	case Device::kRefresh:
+	  chosen_item = Device::kRefresh;
+	  break;
+      }
+    } else if (!menu_only) {
+      chosen_item = action;
+    }
+  }
+  
+  ui->EndMenu();
+  return chosen_item;
+		   }
 
 static int compare_string(const void* a, const void* b) {
     return strcmp(*(const char**)a, *(const char**)b);

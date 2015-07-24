@@ -716,49 +716,66 @@ void ScreenRecoveryUI::StartMenu(const char* const * headers, const char* const 
     pthread_mutex_unlock(&updateMutex);
 }
 
+int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
+  #define SCROLL_DOWN 1
+  #define SCROLL_UP 0
+  int old_sel;
+  pthread_mutex_lock(&updateMutex);
+  if (abs) {
+    sel += menu_show_start;
+  }
+  if (show_menu > 0) {
+    old_sel = menu_sel;
+    menu_sel = sel;
+    if (direction == SCROLL_DOWN) {
+      if (menu_show_start > 0) {
+	menu_show_start = menu_show_start - 1;
+      }
+    }
+    if (direction == SCROLL_UP) {
+      int diff = menu_items - max_menu_rows;
+      if (menu_items >= max_menu_rows) {
+	if (menu_show_start < diff) {
+	  menu_show_start = menu_show_start + 1;
+	}
+      }
+    }
+    sel = menu_sel;
+    update_screen_locked();
+  }
+  pthread_mutex_unlock(&updateMutex);
+  return sel;
+}
+
 int ScreenRecoveryUI::SelectMenu(int sel, bool abs) {
-    int wrapped = 0;
+    int old_sel;
     pthread_mutex_lock(&updateMutex);
     if (abs) {
         sel += menu_show_start;
     }
     if (show_menu > 0) {
-        int old_sel = menu_sel;
+        old_sel = menu_sel;
         menu_sel = sel;
-        if (rainbow) {
-            if (menu_sel > old_sel) {
-                move_rainbow(1);
-            } else if (menu_sel < old_sel) {
-                move_rainbow(-1);
-            }
-        }
         if (menu_sel < 0) {
-            wrapped = -1;
+            // Wraparound from top to bottom
             menu_sel = menu_items + menu_sel;
         }
         if (menu_sel >= menu_items) {
-            wrapped = 1;
+            // Wraparound back up from the bottom
             menu_sel = menu_sel - menu_items;
         }
         if (menu_sel < menu_show_start && menu_show_start > 0) {
+            // We scrolled up
             menu_show_start = menu_sel;
         }
         if (menu_sel - menu_show_start >= max_menu_rows) {
+            // We scrolled down
             menu_show_start = menu_sel - max_menu_rows + 1;
         }
         sel = menu_sel;
-        if (wrapped != 0) {
-            if (wrap_count / wrapped > 0) {
-                wrap_count += wrapped;
-            } else {
-                wrap_count = wrapped;
-            }
-            if (wrap_count / wrapped >= 5) {
-                wrap_count = 0;
-                ToggleRainbowMode();
-            }
+        if (menu_sel != old_sel) {
+            update_screen_locked();
         }
-        if (menu_sel != old_sel) update_screen_locked();
     }
     pthread_mutex_unlock(&updateMutex);
     return sel;
