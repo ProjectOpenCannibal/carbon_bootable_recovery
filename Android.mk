@@ -41,7 +41,8 @@ LOCAL_SRC_FILES := \
     asn1_decoder.cpp \
     verifier.cpp \
     adb_install.cpp \
-    fuse_sdcard_provider.c
+    fuse_sdcard_provider.c \
+    libs/POCExtras/RebootMenu.cpp
 
 # External tools
 LOCAL_SRC_FILES += \

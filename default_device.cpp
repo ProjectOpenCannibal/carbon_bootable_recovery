@@ -27,18 +27,16 @@ static const char* HEADERS[] = { "Swipe up/down to change selections;",
                                  "",
                                  NULL };
 
-static const char* ITEMS[] =  {"Reboot system now",
-                               "Apply update",
-                               "Wipe data/factory reset",
-                               "Wipe cache partition",
-                               "Wipe media",
-#ifdef DOWNLOAD_MODE
-                               "Reboot to download mode",
-#else
-                               "Reboot to bootloader",
-#endif
-                               "Power down",
+static const char* ITEMS[] =  {"Reboot",
+                               "Install ZIP Package",
+                               "Factory Reset",
+                               "Wipe Cache",
+                               "Wipe User Media",
+                               "Settings",
+                               "Power Off",
+                               /*
                                "View recovery logs",
+                               */
                                NULL };
 
 static Device::BuiltinAction ACTIONS[] = {
@@ -47,7 +45,7 @@ static Device::BuiltinAction ACTIONS[] = {
     Device::WIPE_DATA,
     Device::WIPE_CACHE,
     Device::WIPE_MEDIA,
-    Device::REBOOT_BOOTLOADER,
+    Device::SETTINGS,
     Device::SHUTDOWN,
     Device::READ_RECOVERY_LASTLOG,
     Device::NO_ACTION
@@ -62,7 +60,7 @@ class DefaultDevice : public Device {
         // Remove "wipe media" option for non-datamedia devices
         if (!is_data_media()) {
             int i;
-            for (i = 4; ITEMS[i+1] != NULL; ++i) {
+            for (i = 5; ITEMS[i+1] != NULL; ++i) {
                 ITEMS[i] = ITEMS[i+1];
                 ACTIONS[i] = ACTIONS[i+1];
             }
@@ -84,12 +82,12 @@ class DefaultDevice : public Device {
               case KEY_VOLUMEDOWN:
               case KEY_MENU:
                 return kHighlightDown;
-		
-	      case KEY_J:
-		return kScrollDown;
-		
-	      case KEY_K:
-		return kScrollUp;
+
+              case KEY_J:
+		            return kScrollDown;
+
+              case KEY_K:
+		            return kScrollUp;
 
               case KEY_LEFTSHIFT:
               case KEY_UP:

@@ -53,6 +53,8 @@ extern "C" {
 #include "recovery_cmds.h"
 }
 
+#include "libs/POCExtras/RebootMenu.h"
+
 struct selabel_handle *sehandle;
 
 #ifdef HAVE_OEMLOCK
@@ -1088,8 +1090,21 @@ prompt_and_wait(Device* device, int status) {
                     break;
 
                 case Device::REBOOT:
+                {
+                    int reboot_action = RebootMenu::StartMenu(device);
+                    switch (reboot_action) {
+                        case REBOOTMENU_MAIN:
+                            return Device::REBOOT;
+                        case REBOOTMENU_RECOVERY:
+                            return Device::REBOOT_RECOVERY;
+                        case REBOOTMENU_BOOTLOADER:
+                            return Device::REBOOT_BOOTLOADER;
+                        default:break;
+                    }
+                    break;
+                }
+
                 case Device::SHUTDOWN:
-                case Device::REBOOT_BOOTLOADER:
                     return chosen_action;
 
                 case Device::WIPE_DATA:
@@ -1108,6 +1123,8 @@ prompt_and_wait(Device* device, int status) {
                     wipe_media(ui->IsTextVisible(), device);
                     if (!ui->IsTextVisible()) return Device::NO_ACTION;
                     break;
+
+                case Device::SETTINGS:break;
 
                 case Device::APPLY_UPDATE:
                     status = show_apply_update_menu(device);
@@ -1490,6 +1507,11 @@ main(int argc, char **argv) {
             ui->Print("Rebooting to bootloader...\n");
             property_set(ANDROID_RB_PROPERTY, "reboot,bootloader");
 #endif
+            break;
+
+        case Device::REBOOT_RECOVERY:
+            ui->Print("Rebooting to recovery...\n");
+            property_set(ANDROID_RB_PROPERTY, "reboot,recovery");
             break;
 
         default:
