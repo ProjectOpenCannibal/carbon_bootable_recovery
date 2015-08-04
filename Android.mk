@@ -41,8 +41,7 @@ LOCAL_SRC_FILES := \
     asn1_decoder.cpp \
     verifier.cpp \
     adb_install.cpp \
-    fuse_sdcard_provider.c \
-    libs/POCExtras/RebootMenu.cpp
+    fuse_sdcard_provider.c
 
 # External tools
 LOCAL_SRC_FILES += \
@@ -96,7 +95,8 @@ LOCAL_STATIC_LIBRARIES := \
     libc \
     libext2_blkid \
     libext2_uuid \
-    libcrecovery
+    libcrecovery \
+    libpocextras
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
 # See comments in recovery.cpp for the API.
@@ -318,6 +318,7 @@ include $(LOCAL_PATH)/libcrecovery/Android.mk \
     $(LOCAL_PATH)/uncrypt/Android.mk \
     $(LOCAL_PATH)/updater/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
-    $(LOCAL_PATH)/voldclient/Android.mk
+    $(LOCAL_PATH)/voldclient/Android.mk \
+    $(LOCAL_PATH)/libs/POCExtras/Android.mk
 
 endif
