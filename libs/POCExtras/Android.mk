@@ -23,6 +23,9 @@ find $(1) -name "*.cpp" -and -not -name ".*") \
 )
 endef
 LOCAL_SRC_FILES += $(call all-cpp-files-under, .)
+LOCAL_SRC_FILES += \
+    iniparser/iniparser.c \
+    iniparser/dictionary.c
 
 LOCAL_CFLAGS += -DUSE_EXT4 -DMINIVOLD
 LOCAL_C_INCLUDES += \
