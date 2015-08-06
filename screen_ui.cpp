@@ -33,6 +33,7 @@
 #include "minui/minui.h"
 #include "screen_ui.h"
 #include "ui.h"
+#include "cutils/properties.h"
 
 #ifndef SEPARATOR_COLOR
 #define SEPARATOR_COLOR 160, 160, 160, 255
@@ -386,6 +387,7 @@ void ScreenRecoveryUI::ToggleRainbowMode()
 {
     rainbow = rainbow ? false : true;
     set_rainbow_mode(rainbow);
+    property_set("sys.rainbow.recovery", rainbow ? "1" : "0");
 }
 
 void ScreenRecoveryUI::progress_loop() {
