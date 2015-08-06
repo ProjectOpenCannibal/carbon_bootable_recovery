@@ -753,34 +753,34 @@ void ScreenRecoveryUI::StartMenu(const char* const * headers, const char* const 
 }
 
 int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
-  #define SCROLL_DOWN 1
-  #define SCROLL_UP 0
-  int old_sel;
-  pthread_mutex_lock(&updateMutex);
-  if (abs) {
-    sel += menu_show_start;
-  }
-  if (show_menu > 0) {
-    old_sel = menu_sel;
-    menu_sel = sel;
-    if (direction == SCROLL_DOWN) {
-      if (menu_show_start > 0) {
-	menu_show_start = menu_show_start - 1;
-      }
+#define SCROLL_DOWN 1
+#define SCROLL_UP 0
+    int old_sel;
+    pthread_mutex_lock(&updateMutex);
+    if (abs) {
+        sel += menu_show_start;
     }
-    if (direction == SCROLL_UP) {
-      int diff = menu_items - max_menu_rows;
-      if (menu_items >= max_menu_rows) {
-	if (menu_show_start < diff) {
-	  menu_show_start = menu_show_start + 1;
-	}
-      }
+    if (show_menu > 0) {
+        old_sel = menu_sel;
+        menu_sel = sel;
+        if (direction == SCROLL_DOWN) {
+            if (menu_show_start > 0) {
+                menu_show_start = menu_show_start - 1;
+            }
+        }
+        if (direction == SCROLL_UP) {
+            int diff = menu_items - max_menu_rows;
+            if (menu_items >= max_menu_rows) {
+                if (menu_show_start < diff) {
+                    menu_show_start = menu_show_start + 1;
+                }
+            }
+        }
+        sel = menu_sel;
+        update_screen_locked();
     }
-    sel = menu_sel;
-    update_screen_locked();
-  }
-  pthread_mutex_unlock(&updateMutex);
-  return sel;
+    pthread_mutex_unlock(&updateMutex);
+    return sel;
 }
 
 int ScreenRecoveryUI::SelectMenu(int sel, bool abs) {
@@ -792,6 +792,13 @@ int ScreenRecoveryUI::SelectMenu(int sel, bool abs) {
     if (show_menu > 0) {
         old_sel = menu_sel;
         menu_sel = sel;
+        if (rainbow) {
+            if (menu_sel > old_sel) {
+                move_rainbow(1);
+            } else if (menu_sel < old_sel) {
+                move_rainbow(-1);
+            }
+        }
         if (menu_sel < 0) {
             // Wraparound from top to bottom
             menu_sel = menu_items + menu_sel;
