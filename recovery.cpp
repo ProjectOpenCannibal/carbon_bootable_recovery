@@ -53,6 +53,7 @@ extern "C" {
 #include "recovery_cmds.h"
 }
 
+#include "libs/POCExtras/Settings.h"
 #include "libs/POCExtras/RebootMenu.h"
 
 struct selabel_handle *sehandle;
@@ -1124,7 +1125,11 @@ prompt_and_wait(Device* device, int status) {
                     if (!ui->IsTextVisible()) return Device::NO_ACTION;
                     break;
 
-                case Device::SETTINGS:break;
+                case Device::SETTINGS:
+                {
+                    Settings::StartMenu(device);
+                    break;
+                }
 
                 case Device::APPLY_UPDATE:
                     status = show_apply_update_menu(device);

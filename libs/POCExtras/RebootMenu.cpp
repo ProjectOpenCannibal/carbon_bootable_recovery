@@ -2,32 +2,8 @@
 // Created by drew on 8/3/15.
 //
 
-#include <ctype.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <dirent.h>
-
-#include "../../bootloader.h"
-#include "../../common.h"
-#include "cutils/properties.h"
-#include "cutils/android_reboot.h"
-#include "../../install.h"
-#include "../../minui/minui.h"
-#include "../../minzip/DirUtil.h"
-#include "../../roots.h"
-#include "../../ui.h"
-#include "../../screen_ui.h"
-#include "../../device.h"
-
-#include "cutils/properties.h"
-
-#include "../../voldclient/voldclient.h"
-
 #include "ExternalFuncs.h"
+#include "Settings.h"
 #include "RebootMenu.h"
 
 extern RecoveryUI* ui;
