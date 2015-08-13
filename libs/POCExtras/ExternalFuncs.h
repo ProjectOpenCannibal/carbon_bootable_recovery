@@ -41,6 +41,9 @@
 
 #include "../../voldclient/voldclient.h"
 
+#include "iniparser/iniparser.h"
+#include "iniparser/dictionary.h"
+
 int get_menu_selection(const char* const * headers, const char* const * items, int menu_only, int initial_selection, Device* device);
 void wipe_data(int confirm, Device* device);
 int erase_volume_wrapper(const char *volume);

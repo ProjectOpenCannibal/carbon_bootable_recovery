@@ -43,6 +43,8 @@
 
 #include "messagesocket.h"
 
+#include "libs/POCExtras/ThemeVar.h"
+
 #define UI_WAIT_KEY_TIMEOUT_SEC    120
 
 /* Some extra input defines */

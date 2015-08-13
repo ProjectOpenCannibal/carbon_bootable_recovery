@@ -34,6 +34,7 @@
 #include "screen_ui.h"
 #include "ui.h"
 #include "cutils/properties.h"
+#include "libs/POCExtras/ThemeVar.h"
 
 #ifndef SEPARATOR_COLOR
 #define SEPARATOR_COLOR 160, 160, 160, 255
@@ -86,6 +87,7 @@ ScreenRecoveryUI::ScreenRecoveryUI() :
     wrap_count(0) {
 
     headerIcon = NULL;
+    batteryIcon = NULL;
     for (int i = 0; i < NR_ICONS; i++)
         backgroundIcon[i] = NULL;
 
@@ -201,31 +203,66 @@ void ScreenRecoveryUI::draw_progress_locked()
 void ScreenRecoveryUI::SetColor(UIElement e) {
     switch (e) {
         case HEADER:
-            gr_color(111,111,111,255);
+            gr_color(ThemeVar::C_HEADER[0],
+                     ThemeVar::C_HEADER[1],
+                     ThemeVar::C_HEADER[2],
+                     ThemeVar::C_HEADER[3]);
             break;
         case TOP:
-            gr_color(208, 208, 208, 255);
+            gr_color(ThemeVar::C_TOP[0],
+                     ThemeVar::C_TOP[1],
+                     ThemeVar::C_TOP[2],
+                     ThemeVar::C_TOP[3]);
             break;
         case MENU:
         case MENU_SEL_FG:
-            gr_color(0, 177, 229, 255);
+            gr_color(ThemeVar::C_MENU_SEL_FG[0],
+                     ThemeVar::C_MENU_SEL_FG[1],
+                     ThemeVar::C_MENU_SEL_FG[2],
+                     ThemeVar::C_MENU_SEL_FG[3]);
             break;
         case MENU_SEL_BG:
-            gr_color(106, 103, 102, 255);
+            gr_color(ThemeVar::C_MENU_SEL_BG[0],
+                     ThemeVar::C_MENU_SEL_BG[1],
+                     ThemeVar::C_MENU_SEL_BG[2],
+                     ThemeVar::C_MENU_SEL_BG[3]);
             break;
         case LOG:
-            gr_color(76, 76, 76, 255);
+            gr_color(ThemeVar::C_LOG[0],
+                     ThemeVar::C_LOG[1],
+                     ThemeVar::C_LOG[2],
+                     ThemeVar::C_LOG[3]);
             break;
         case TEXT_FILL:
-            gr_color(0, 0, 0, 255);
+            gr_color(ThemeVar::C_TEXT_FILL[0],
+                     ThemeVar::C_TEXT_FILL[1],
+                     ThemeVar::C_TEXT_FILL[2],
+                     ThemeVar::C_TEXT_FILL[3]);
             break;
         case ERROR_TEXT:
-            gr_color(255, 0, 0, 255);
+            gr_color(ThemeVar::C_ERROR_TEXT[0],
+                     ThemeVar::C_ERROR_TEXT[1],
+                     ThemeVar::C_ERROR_TEXT[2],
+                     ThemeVar::C_ERROR_TEXT[3]);
             break;
         default:
-            gr_color(255, 255, 255, 255);
+            gr_color(ThemeVar::C_DEFAULT[0],
+                     ThemeVar::C_DEFAULT[1],
+                     ThemeVar::C_DEFAULT[2],
+                     ThemeVar::C_DEFAULT[3]);
             break;
     }
+}
+
+int ScreenRecoveryUI::draw_battery_icon()
+{
+    gr_surface surface = batteryIcon;
+    int bw = battery_width;
+    int bh = battery_height;
+    int bx = ThemeVar::BatteryXPos;
+    int by = ThemeVar::BatteryYPos;
+    gr_blit(surface, 0, 0, bw, bh, bx, by);
+    return bh;
 }
 
 int ScreenRecoveryUI::draw_header_icon()
@@ -265,6 +302,11 @@ void ScreenRecoveryUI::draw_dialog()
        return;
     }
     draw_header_icon();
+    if (ThemeVar::BatteryIndicator.compare("true") == 0) {
+        // Battery::SetLevel();
+        LoadBitmap(ThemeVar::BatteryLevel.c_str(), &batteryIcon, ThemeVar::CurrentTheme.c_str());
+        draw_battery_icon();
+    }
 
     int iconHeight = gr_get_height(backgroundIcon[dialog_icon]);
 
@@ -333,6 +375,12 @@ void ScreenRecoveryUI::draw_screen_locked()
 
         if (currentIcon != ERASING && currentIcon != INSTALLING_UPDATE)
             draw_header_icon();
+
+        if (ThemeVar::BatteryIndicator.compare("true") == 0) {
+            // Battery::SetLevel();
+            LoadBitmap(ThemeVar::BatteryLevel.c_str(), &batteryIcon, ThemeVar::CurrentTheme.c_str());
+            draw_battery_icon();
+        }
 
         if (currentIcon == ERASING || currentIcon == INSTALLING_UPDATE || currentIcon == VIEWING_LOG) {
             int y = currentIcon == INSTALLING_UPDATE ? gr_fb_height() / 4 : header_height + 4;
@@ -454,7 +502,7 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, con
         result = res_create_display_surface(filename, surface);
     }
     if (result < 0) {
-        LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
+        LOGI("missing bitmap %s\n(Code %d)\n", filename, result);
         res_create_display_surface(filename, surface);
     }
 }
@@ -467,7 +515,7 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
         result = res_create_multi_display_surface(filename, frames, surface);
     }
     if (result < 0) {
-        LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
+        LOGI("missing bitmap %s\n(Code %d)\n", filename, result);
         res_create_multi_display_surface(filename, frames, surface);
     }
 }
@@ -480,7 +528,7 @@ void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* sur
         result = res_create_localized_alpha_surface(filename, locale, surface);
     }
     if (result < 0) {
-        LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
+        LOGI("missing bitmap %s\n(Code %d)\n", filename, result);
         res_create_localized_alpha_surface(filename, locale, surface);
     }
 }
@@ -492,34 +540,36 @@ void ScreenRecoveryUI::ResetIcons() {
     pthread_mutex_unlock(&updateMutex);
 
     ScreenRecoveryUI::ShowText(true);
-    ScreenRecoveryUI::SetBackground(RecoveryUI::NO_COMMAND);
+    ScreenRecoveryUI::SetBackground(RecoveryUI::NONE);
 }
 
 void ScreenRecoveryUI::InitIcons() {
-    LoadBitmap("icon_header", &headerIcon);
+    LoadBitmap("icon_header", &headerIcon, ThemeVar::CurrentTheme.c_str());
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
-    /*
-    Battery icon stuff will go here later
-     */
+    if (ThemeVar::BatteryIndicator.compare("true") == 0) {
+        LoadBitmap(ThemeVar::BatteryLevel.c_str(), &batteryIcon, ThemeVar::CurrentTheme.c_str());
+        battery_height = gr_get_height(batteryIcon);
+        battery_width = gr_get_width(batteryIcon);
+    }
     backgroundIcon[NONE] = NULL;
-    LoadBitmapArray("icon_installing", &installing_frames, &installation);
+    LoadBitmapArray("icon_installing", &installing_frames, &installation, ThemeVar::CurrentTheme.c_str());
     backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : NULL;
     backgroundIcon[ERASING] = backgroundIcon[INSTALLING_UPDATE];
-    LoadBitmap("icon_info", &backgroundIcon[INFO]);
-    LoadBitmap("icon_error", &backgroundIcon[ERROR]);
+    LoadBitmap("icon_info", &backgroundIcon[INFO], ThemeVar::CurrentTheme.c_str());
+    LoadBitmap("icon_error", &backgroundIcon[ERROR], ThemeVar::CurrentTheme.c_str());
     backgroundIcon[NO_COMMAND] = backgroundIcon[ERROR];
-    LoadBitmap("icon_headless", &backgroundIcon[HEADLESS]);
+    LoadBitmap("icon_headless", &backgroundIcon[HEADLESS], ThemeVar::CurrentTheme.c_str());
 
-    LoadBitmap("progress_empty", &progressBarEmpty);
-    LoadBitmap("progress_fill", &progressBarFill);
-    LoadBitmap("stage_empty", &stageMarkerEmpty);
-    LoadBitmap("stage_fill", &stageMarkerFill);
+    LoadBitmap("progress_empty", &progressBarEmpty, ThemeVar::CurrentTheme.c_str());
+    LoadBitmap("progress_fill", &progressBarFill, ThemeVar::CurrentTheme.c_str());
+    LoadBitmap("stage_empty", &stageMarkerEmpty, ThemeVar::CurrentTheme.c_str());
+    LoadBitmap("stage_fill", &stageMarkerFill, ThemeVar::CurrentTheme.c_str());
 
-    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE]);
-    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING]);
-    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND]);
-    LoadLocalizedBitmap("error_text", &backgroundText[ERROR]);
+    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE], ThemeVar::CurrentTheme.c_str());
+    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], ThemeVar::CurrentTheme.c_str());
+    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], ThemeVar::CurrentTheme.c_str());
+    LoadLocalizedBitmap("error_text", &backgroundText[ERROR], ThemeVar::CurrentTheme.c_str());
 }
 
 void ScreenRecoveryUI::Init()

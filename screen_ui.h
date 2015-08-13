@@ -84,6 +84,7 @@ class ScreenRecoveryUI : public RecoveryUI {
     pthread_cond_t  progressCondition;
 
     gr_surface headerIcon;
+    gr_surface batteryIcon;
     gr_surface backgroundIcon[NR_ICONS];
     gr_surface backgroundText[NR_ICONS];
     gr_surface *installation;
@@ -143,6 +144,8 @@ class ScreenRecoveryUI : public RecoveryUI {
 
     int header_height;
     int header_width;
+    int battery_height;
+    int battery_width;
     int text_first_row;
 
     bool update_waiting;
@@ -152,6 +155,7 @@ class ScreenRecoveryUI : public RecoveryUI {
 
     void draw_background_locked(Icon icon);
     void draw_progress_locked();
+    int  draw_battery_icon();
     int  draw_header_icon();
     void draw_menu_item(int textrow, const char *text, int selected);
     void draw_dialog();

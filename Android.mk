@@ -30,6 +30,18 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
+LOCAL_EXTRA_SRC_FILES := \
+    libs/POCExtras/RebootMenu.cpp \
+    libs/POCExtras/Settings.cpp \
+    libs/POCExtras/Storage.cpp \
+    libs/POCExtras/Tests.cpp \
+    libs/POCExtras/Themes.cpp \
+    libs/POCExtras/ThemeVar.cpp \
+    libs/POCExtras/Util.cpp \
+    libs/POCExtras/ZipSig.cpp \
+    libs/POCExtras/iniparser/iniparser.c \
+    libs/POCExtras/iniparser/dictionary.c
+
 LOCAL_SRC_FILES := \
     recovery.cpp \
     bootloader.cpp \
@@ -41,7 +53,8 @@ LOCAL_SRC_FILES := \
     asn1_decoder.cpp \
     verifier.cpp \
     adb_install.cpp \
-    fuse_sdcard_provider.c
+    fuse_sdcard_provider.c \
+    $(LOCAL_EXTRA_SRC_FILES)
 
 # External tools
 LOCAL_SRC_FILES += \
@@ -99,8 +112,7 @@ LOCAL_STATIC_LIBRARIES := \
     libm \
     libc \
     libext2_blkid \
-    libext2_uuid \
-    libpocextras
+    libext2_uuid
 
 LOCAL_C_INCLUDES += \
     system/core/fs_mgr/include \
@@ -335,6 +347,5 @@ include $(LOCAL_PATH)/bmlutils/Android.mk \
     $(LOCAL_PATH)/updater/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
     $(LOCAL_PATH)/voldclient/Android.mk \
-    $(LOCAL_PATH)/libs/POCExtras/Android.mk
 
 endif

@@ -16,12 +16,15 @@
 #ifndef RECOVERY_THEMES_H
 #define RECOVERY_THEMES_H
 
+#include "../rdestl/rde_string.h"
+using namespace rde;
+
 class Themes {
 public:
     static void StartMenu(Device* device);
+    static void List(Device* device);
     static char* GetName(const char * themepath);
-    static int Load(Device* device);
-    static int Save();
+    static void Load(const char *themename);
 };
 
 
