@@ -1373,6 +1373,8 @@ main(int argc, char **argv) {
     ui->SetLocale(locale);
     ui->Init();
 
+    Settings::Load();
+
     int st_cur, st_max;
     if (stage != NULL && sscanf(stage, "%d/%d", &st_cur, &st_max) == 2) {
         ui->SetStage(st_cur, st_max);

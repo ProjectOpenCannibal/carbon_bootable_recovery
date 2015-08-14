@@ -35,27 +35,3 @@ string ThemeVar::BatteryLevel("bat_100");
 int ThemeVar::BatteryXPos = 0;
 int ThemeVar::BatteryYPos = 0;
 int ThemeVar::CenterText = 0;
-
-int ThemeVar::GetInt() {
-    return 0;
-}
-
-bool ThemeVar::GetBool() {
-    return false;
-}
-
-const char * ThemeVar::GetString() {
-    return "0";
-}
-
-int ThemeVar::SetInt() {
-    return 0;
-}
-
-bool ThemeVar::SetBool() {
-    return false;
-}
-
-const char * ThemeVar::SetString() {
-    return "0";
-}

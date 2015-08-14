@@ -37,8 +37,7 @@ void Themes::StartMenu(Device *device) {
             {
                 ThemeVar::CurrentTheme = "default";
                 Themes::Load("default");
-                // Settings::Save();
-                ui->ResetIcons();
+                Settings::Save("settings:theme", "default");
                 break;
             }
             case CUSTOM_THEMES:
@@ -82,6 +81,7 @@ void Themes::Load(const char *themename) {
         }
         LOGI("Theme %s loaded from %s!\n", themename, ThemeFile.c_str());
         ThemeVar::CurrentTheme = themename;
+        ui->ResetIcons();
     } else {
         char * ini_file = "/res/images/default_theme.ini";
         ThemeDict = iniparser_load(ini_file);
@@ -91,6 +91,7 @@ void Themes::Load(const char *themename) {
             return;
         }
         ThemeVar::CurrentTheme = "default";
+        ui->ResetIcons();
     }
 
     ThemeVar::C_HEADER[0] = iniparser_getint(ThemeDict, "theme:header_r", 111);
@@ -245,9 +246,7 @@ void Themes::List(Device *device) {
         ThemeVar::CurrentTheme = item;
         Load(ThemeVar::CurrentTheme.c_str());
 
-        // Settings::Save();
-
-        ui->ResetIcons();
+        Settings::Save("settings:theme", ThemeVar::CurrentTheme.c_str());
 
         for (i = 0; i < z_size; ++i) free(zips[i]);
         for (i = 0; i < th_size; ++i) free(themes[i]);

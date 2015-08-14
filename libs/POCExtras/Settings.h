@@ -18,15 +18,21 @@
 
 #include "iniparser/dictionary.h"
 #include "iniparser/iniparser.h"
-#include <utils/String8.h>
+
+#include "../rdestl/rde_string.h"
+using namespace rde;
 
 class Settings {
 public:
-    static dictionary * settings;
+    static dictionary * SettingsDictionary;
 
     static void StartMenu(Device* device);
-    static int Load();
-    static int Save();
+    static void Load();
+    static void Save(const char *setting, const char *value);
+
+    static int GetInt(const char *SettingItem, int defaultret);
+    static string GetString(const char* SettingItem, char* defaultret);
+    static bool GetBool(const char *SettingItem, bool defaultret);
 };
 
 

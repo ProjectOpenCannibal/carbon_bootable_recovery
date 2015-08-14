@@ -40,16 +40,6 @@ public:
     static string BatteryIndicator;
     static string BatteryLevel;
     static int CenterText;
-
-    /* Variable getters */
-    static int GetInt();
-    static bool GetBool();
-    static const char * GetString();
-
-    /* Variable setters */
-    static int SetInt();
-    static bool SetBool();
-    static const char * SetString();
 };
 
 
