@@ -32,7 +32,7 @@ public:
 
     static int GetInt(const char *SettingItem, int defaultret);
     static string GetString(const char* SettingItem, char* defaultret);
-    static bool GetBool(const char *SettingItem, bool defaultret);
+    static int GetBool(const char *SettingItem, bool defaultret);
 };
 
 

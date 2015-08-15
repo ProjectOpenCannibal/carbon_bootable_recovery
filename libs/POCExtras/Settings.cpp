@@ -111,6 +111,6 @@ string Settings::GetString(const char* SettingItem, char* defaultret) {
     return ret;
 }
 
-bool Settings::GetBool(const char* SettingItem, bool defaultret) {
+int Settings::GetBool(const char* SettingItem, bool defaultret) {
     return iniparser_getboolean(SettingsDictionary, SettingItem, defaultret);
 }
