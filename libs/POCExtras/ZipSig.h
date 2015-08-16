@@ -16,6 +16,7 @@
 #ifndef RECOVERY_ZIPSIG_H
 #define RECOVERY_ZIPSIG_H
 
+#include "../../device.h"
 
 class ZipSig {
 public:

@@ -20,5 +20,27 @@
 extern RecoveryUI* ui;
 
 void ZipSig::StartMenu(Device *device) {
-    return;
+    static const char *MenuHeaders[] = {"Zip Verification","",NULL};
+    static const char *MenuItems[] = {"Enable Zip Verification",
+									  "Disable Zip Verification",
+									  NULL
+	};
+	#define ZIP_VERIFY_ON 0
+	#define ZIP_VERIFY_OFF 1
+
+	for (;;) {
+		int MenuSelection = get_menu_selection(MenuHeaders, MenuItems, 0, 0, device);
+		switch (MenuSelection) {
+			case ZIP_VERIFY_ON:
+				Settings::Save("settings:zip_sigverif", "1");
+				return;
+
+			case ZIP_VERIFY_OFF:
+				Settings::Save("settings:zip_sigverif", "0");
+				return;
+
+			case Device::kGoBack:
+				return;
+		}
+	}
 }
