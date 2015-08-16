@@ -515,6 +515,21 @@ int format_volume(const char* volume, bool force) {
         return -1;
     }
 
+    /*
+    We don't want to erase /cache/cot...
+    so we do an rmtree_except instead of reformat
+    */
+
+    if (strcmp(volume, "/cache") && !force) {
+        if (ensure_path_mounted("/cache") == 0) {
+            LOGI("Preserving recovery files...\n");
+            int rc = rmtree_except("/cache", "cot");
+            ensure_path_unmounted(volume);
+            return rc;
+        }
+        LOGI("format_volume failed to mount /cache, formatting instead\n");
+    }
+
     if (strcmp(volume, "/data") == 0 && is_data_media() && !force) {
         if (ensure_path_mounted("/data") == 0) {
             // Preserve .layout_version to avoid "nesting bug"
@@ -544,7 +559,7 @@ int format_volume(const char* volume, bool force) {
 
             return rc;
         }
-        LOGE("format_volume failed to mount /data, formatting instead\n");
+        LOGI("format_volume failed to mount /data, formatting instead\n");
     }
 
     if (ensure_path_unmounted(volume) != 0) {
