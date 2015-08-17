@@ -359,6 +359,9 @@ int ensure_volume_mounted(fstab_rec* v, bool force_rw) {
         if (result == 0) return 0;
 
         LOGE("failed to mount %s (%s)\n", v->mount_point, strerror(errno));
+        if (strcmp(v->mount_point, "/data") == 0)
+            LOGE("this will occur on encrypted devices\n");
+
         return -1;
     }
 
