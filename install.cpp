@@ -37,8 +37,8 @@
 
 #include "cutils/properties.h"
 
-#include "libs/POCExtras/ZipSig.h"
-#include "libs/POCExtras/Settings.h"
+#include "libs/CarbonExtras/ZipSig.h"
+#include "libs/CarbonExtras/Settings.h"
 
 extern RecoveryUI* ui;
 

@@ -1,4 +1,6 @@
-/* Copyright (C) 2015 Project Open Cannibal
+/*
+* Copyright (C) 2015 Project Open Cannibal
+* Copyright (C) 2015 CarbonROM
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,14 +15,15 @@
 * limitations under the License.
 */
 
-#ifndef RECOVERY_UTIL_H
-#define RECOVERY_UTIL_H
+#ifndef RECOVERY_ZIPSIG_H
+#define RECOVERY_ZIPSIG_H
 
+#include "../../device.h"
 
-class Util {
+class ZipSig {
 public:
-    static int CompareString(const void* a, const void* b);
+    static void StartMenu(Device* device);
 };
 
 
-#endif //RECOVERY_UTIL_H
+#endif //RECOVERY_ZIPSIG_H

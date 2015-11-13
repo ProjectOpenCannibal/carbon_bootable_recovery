@@ -1,4 +1,6 @@
-/* Copyright (C) 2015 Project Open Cannibal
+/* 
+* Copyright (C) 2015 Project Open Cannibal
+* Copyright (C) 2015 CarbonROM
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,18 +15,9 @@
 * limitations under the License.
 */
 
-#ifndef RECOVERY_REBOOTMENU_H
-#define RECOVERY_REBOOTMENU_H
+#include <string.h>
+#include "Util.h"
 
-#define REBOOTMENU_MAIN 0
-#define REBOOTMENU_RECOVERY 1
-#define REBOOTMENU_BOOTLOADER 2
-
-
-class RebootMenu {
-public:
-    static int StartMenu(Device* device);
-};
-
-
-#endif //RECOVERY_REBOOTMENU_H
+int Util::CompareString(const void *a, const void *b) {
+    return strcmp(*(const char**)a, *(const char**)b);
+}

@@ -1,4 +1,6 @@
-/* Copyright (C) 2015 Project Open Cannibal
+/*
+* Copyright (C) 2015 Project Open Cannibal
+* Copyright (C) 2015 CarbonROM
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,15 +15,12 @@
 * limitations under the License.
 */
 
-#ifndef RECOVERY_ZIPSIG_H
-#define RECOVERY_ZIPSIG_H
+#include "ExternalFuncs.h"
+#include "Settings.h"
+#include "Tests.h"
 
-#include "../../device.h"
+extern RecoveryUI* ui;
 
-class ZipSig {
-public:
-    static void StartMenu(Device* device);
-};
-
-
-#endif //RECOVERY_ZIPSIG_H
+void Tests::StartMenu(Device * device) {
+    return;
+}

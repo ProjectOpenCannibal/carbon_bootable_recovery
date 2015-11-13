@@ -1,4 +1,6 @@
-/* Copyright (C) 2015 Project Open Cannibal
+/*
+* Copyright (C) 2015 Project Open Cannibal
+* Copyright (C) 2015 CarbonROM
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,5 +15,14 @@
 * limitations under the License.
 */
 
-#define COT_SETTINGS_LOC "/cache/cot/settings.ini"
-#define COT_THEMES_LOC "/cache/cot/themes/"
+#ifndef RECOVERY_TESTS_H
+#define RECOVERY_TESTS_H
+
+
+class Tests {
+public:
+    static void StartMenu(Device* device);
+};
+
+
+#endif //RECOVERY_TESTS_H

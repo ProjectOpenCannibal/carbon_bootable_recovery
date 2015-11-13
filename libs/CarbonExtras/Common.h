@@ -1,4 +1,6 @@
-/* Copyright (C) 2015 Project Open Cannibal
+/* 
+* Copyright (C) 2015 Project Open Cannibal
+* Copyright (C) 2015 CarbonROM
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,12 +15,5 @@
 * limitations under the License.
 */
 
-#include "ExternalFuncs.h"
-#include "Settings.h"
-#include "Tests.h"
-
-extern RecoveryUI* ui;
-
-void Tests::StartMenu(Device * device) {
-    return;
-}
+#define COT_SETTINGS_LOC "/cache/cot/settings.ini"
+#define COT_THEMES_LOC "/cache/cot/themes/"

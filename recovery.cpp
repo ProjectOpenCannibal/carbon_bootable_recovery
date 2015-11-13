@@ -53,8 +53,8 @@ extern "C" {
 #include "recovery_cmds.h"
 }
 
-#include "libs/POCExtras/Settings.h"
-#include "libs/POCExtras/RebootMenu.h"
+#include "libs/CarbonExtras/Settings.h"
+#include "libs/CarbonExtras/RebootMenu.h"
 
 struct selabel_handle *sehandle;
 

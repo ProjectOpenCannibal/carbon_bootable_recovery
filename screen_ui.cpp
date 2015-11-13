@@ -34,7 +34,7 @@
 #include "screen_ui.h"
 #include "ui.h"
 #include "cutils/properties.h"
-#include "libs/POCExtras/ThemeVar.h"
+#include "libs/CarbonExtras/ThemeVar.h"
 
 #ifndef SEPARATOR_COLOR
 #define SEPARATOR_COLOR 160, 160, 160, 255

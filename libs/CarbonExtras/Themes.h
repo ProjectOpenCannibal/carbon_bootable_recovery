@@ -1,4 +1,6 @@
-/* Copyright (C) 2015 Project Open Cannibal
+/* 
+* Copyright (C) 2015 Project Open Cannibal
+* Copyright (C) 2015 CarbonROM
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,14 +15,19 @@
 * limitations under the License.
 */
 
-#ifndef RECOVERY_TESTS_H
-#define RECOVERY_TESTS_H
+#ifndef RECOVERY_THEMES_H
+#define RECOVERY_THEMES_H
 
+#include "../rdestl/rde_string.h"
+using namespace rde;
 
-class Tests {
+class Themes {
 public:
     static void StartMenu(Device* device);
+    static void List(Device* device);
+    static char* GetName(const char * themepath);
+    static void Load(const char *themename);
 };
 
 
-#endif //RECOVERY_TESTS_H
+#endif //RECOVERY_THEMES_H

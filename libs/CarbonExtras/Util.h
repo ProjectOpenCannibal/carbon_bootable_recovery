@@ -1,4 +1,6 @@
-/* Copyright (C) 2015 Project Open Cannibal
+/* 
+* Copyright (C) 2015 Project Open Cannibal
+* Copyright (C) 2015 CarbonROM
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -12,19 +14,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-#ifndef RECOVERY_STORAGE_H
-#define RECOVERY_STORAGE_H
+
+#ifndef RECOVERY_UTIL_H
+#define RECOVERY_UTIL_H
 
 
-class Storage {
+class Util {
 public:
-    static void MountCache();
-    static void UnmountCache();
-    static void EnsureDirectoryExists(const char* dir);
-    static char** GatherFiles(const char* directory, const char* fileExtensionOrDirectory, int* numFiles);
-    static void FreeStringArray(char** array);
-
+    static int CompareString(const void* a, const void* b);
 };
 
 
-#endif //RECOVERY_STORAGE_H
+#endif //RECOVERY_UTIL_H

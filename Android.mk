@@ -31,16 +31,16 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_EXTRA_SRC_FILES := \
-    libs/POCExtras/RebootMenu.cpp \
-    libs/POCExtras/Settings.cpp \
-    libs/POCExtras/Storage.cpp \
-    libs/POCExtras/Tests.cpp \
-    libs/POCExtras/Themes.cpp \
-    libs/POCExtras/ThemeVar.cpp \
-    libs/POCExtras/Util.cpp \
-    libs/POCExtras/ZipSig.cpp \
-    libs/POCExtras/iniparser/iniparser.c \
-    libs/POCExtras/iniparser/dictionary.c
+    libs/CarbonExtras/RebootMenu.cpp \
+    libs/CarbonExtras/Settings.cpp \
+    libs/CarbonExtras/Storage.cpp \
+    libs/CarbonExtras/Tests.cpp \
+    libs/CarbonExtras/Themes.cpp \
+    libs/CarbonExtras/ThemeVar.cpp \
+    libs/CarbonExtras/Util.cpp \
+    libs/CarbonExtras/ZipSig.cpp \
+    libs/CarbonExtras/iniparser/iniparser.c \
+    libs/CarbonExtras/iniparser/dictionary.c
 
 LOCAL_SRC_FILES := \
     recovery.cpp \
