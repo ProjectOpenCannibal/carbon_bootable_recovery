@@ -35,6 +35,7 @@
 #include "ui.h"
 #include "cutils/properties.h"
 #include "libs/CarbonExtras/ThemeVar.h"
+#include "libs/CarbonExtras/Battery.h"
 
 #ifndef SEPARATOR_COLOR
 #define SEPARATOR_COLOR 160, 160, 160, 255
@@ -306,8 +307,9 @@ void ScreenRecoveryUI::draw_dialog()
        return;
     }
     draw_header_icon();
+    
     if (ThemeVar::BatteryIndicator.compare("true") == 0) {
-        // Battery::SetLevel();
+        Battery::SetLevel();
         LoadBitmap(ThemeVar::BatteryLevel.c_str(), &batteryIcon, ThemeVar::CurrentTheme.c_str());
         draw_battery_icon();
     }
@@ -381,7 +383,7 @@ void ScreenRecoveryUI::draw_screen_locked()
             draw_header_icon();
 
         if (ThemeVar::BatteryIndicator.compare("true") == 0) {
-            // Battery::SetLevel();
+            Battery::SetLevel();
             LoadBitmap(ThemeVar::BatteryLevel.c_str(), &batteryIcon, ThemeVar::CurrentTheme.c_str());
             draw_battery_icon();
         }

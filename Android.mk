@@ -31,6 +31,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_EXTRA_SRC_FILES := \
+    libs/CarbonExtras/Battery.cpp \
     libs/CarbonExtras/RebootMenu.cpp \
     libs/CarbonExtras/Settings.cpp \
     libs/CarbonExtras/Storage.cpp \
