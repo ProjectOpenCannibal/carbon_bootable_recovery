@@ -40,6 +40,9 @@
 #include "screen_ui.h"
 #include "ui.h"
 
+#include "libs/CarbonExtras/ThemeVar.h"
+#include "libs/CarbonExtras/Battery.h"
+
 #ifndef SEPARATOR_COLOR
 #define SEPARATOR_COLOR 160, 160, 160, 255
 #endif
@@ -268,17 +271,21 @@ int ScreenRecoveryUI::draw_header_icon()
 
 void ScreenRecoveryUI::draw_menu_item(int textrow, const char *text, int selected)
 {
+    int x = 4;
+    if (0 != ThemeVar::CenterText) {
+        x = (gr_fb_width()/2 - (char_width_*strlen(text))/2);
+    }
     if (selected) {
         SetColor(MENU_SEL_BG);
         gr_fill(0, (textrow) * char_height_,
                 gr_fb_width(), (textrow+3) * char_height_ - 1);
         SetColor(MENU_SEL_FG);
-        gr_text(4, (textrow+1) * char_height_ - 1, text, 0);
+        gr_text(x, (textrow+1) * char_height_ - 1, text, 0);
         SetColor(MENU);
     }
     else {
         SetColor(MENU);
-        gr_text(4, (textrow+1) * char_height_ - 1, text, 0);
+        gr_text(x, (textrow+1) * char_height_ - 1, text, 0);
     }
     gr_color(SEPARATOR_COLOR);
     gr_fill(0, (textrow+3)*char_height_-1, gr_fb_width(), (textrow+3)*char_height_+1);
