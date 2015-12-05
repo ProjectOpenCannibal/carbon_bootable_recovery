@@ -37,6 +37,9 @@
 #include "verifier.h"
 #include "ui.h"
 
+#include "libs/CarbonExtras/ZipSig.h"
+#include "libs/CarbonExtras/Settings.h"
+
 extern RecoveryUI* ui;
 
 #define ASSUMED_UPDATE_BINARY_NAME  "META-INF/com/google/android/update-binary"
@@ -334,9 +337,18 @@ really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
     free(loadedKeys);
     LOGI("verify_file returned %d\n", err);
     if (err != VERIFY_SUCCESS) {
-        LOGE("signature verification failed\n");
-        sysReleaseMap(&map);
-        return INSTALL_CORRUPT;
+        LOGI("signature verification failed\n");
+        int ZipSetting = Settings::GetInt("settings:zip_sigverif", 1);
+        if (ZipSetting != 0) {
+            sysReleaseMap(&map);
+            LOGE("\nIf you want to install untrusted packages, please\n
+            disable signature verification in Settings\n");
+            return INSTALL_CORRUPT;
+        } else {
+            LOGI("\nWe couldn't verify the package signature, but you have\n
+            disabled signature verification in Settings. Please note that\n
+            this package is untrusted and will be installed anyway.\n");
+        }
     }
 
     /* Try to open the package.
