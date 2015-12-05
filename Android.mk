@@ -126,7 +126,8 @@ LOCAL_STATIC_LIBRARIES := \
     libm \
     libc \
     libext2_blkid \
-    libext2_uuid
+    libext2_uuid \
+    libcrecovery
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
 # See comments in recovery.cpp for the API.
@@ -344,7 +345,8 @@ LOCAL_C_INCLUDES += \
 include $(BUILD_EXECUTABLE)
 
 
-include $(LOCAL_PATH)/minui/Android.mk \
+include $(LOCAL_PATH)/libcrecovery/Android.mk \
+    $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/minzip/Android.mk \
     $(LOCAL_PATH)/minadbd/Android.mk \
     $(LOCAL_PATH)/mtdutils/Android.mk \
