@@ -59,6 +59,8 @@ extern "C" {
 #include "recovery_cmds.h"
 }
 
+#include "libs/CarbonExtras/RebootMenu.h"
+
 struct selabel_handle *sehandle;
 
 #ifdef HAVE_OEMLOCK
@@ -1536,6 +1538,10 @@ main(int argc, char **argv) {
             property_set(ANDROID_RB_PROPERTY, "reboot,bootloader");
 #endif
             break;
+
+        case Device::REBOOT_RECOVERY:
+            ui->Print("Rebooting to recovery...\n");
+            property_set(ANDROID_RB_PROPERTY, "reboot,recovery");
 
         default:
             char reason[PROPERTY_VALUE_MAX];

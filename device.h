@@ -68,9 +68,11 @@ class Device : public VoldWatcher {
         WIPE_CACHE = 6,
         WIPE_MEDIA = 7,
         REBOOT_BOOTLOADER = 8,
-        SHUTDOWN = 9,
-        VIEW_RECOVERY_LOGS = 10,
-        MOUNT_SYSTEM = 11,
+        REBOOT_RECOVERY = 9,
+        SETTINGS = 10,
+        SHUTDOWN = 11,
+        VIEW_RECOVERY_LOGS = 12,
+        MOUNT_SYSTEM = 13,
     };
 
     // Return the list of menu items (an array of strings,

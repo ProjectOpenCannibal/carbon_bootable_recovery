@@ -17,18 +17,14 @@
 #include "device.h"
 
 static const char* MENU_ITEMS[] = {
-    "Reboot system now",
-#ifdef DOWNLOAD_MODE
-    "Reboot to download mode",
-#else
-    "Reboot to bootloader",
-#endif
-    "Apply update",
-    "Wipe data/factory reset",
-    "Wipe cache partition",
-    "Wipe media",
-    "Mount /system",
-    "View recovery logs",
+    "Reboot",
+    "Install ZIP Package",
+    "Factory Reset",
+    "Wipe Cache",
+    "Wipe User Media",
+    "Mount System",
+    "View Logs",
+    "Settings",
     "Power off",
     NULL
 };
@@ -42,13 +38,13 @@ const char* const* Device::GetMenuItems() {
 Device::BuiltinAction Device::InvokeMenuItem(int menu_position) {
   switch (menu_position) {
     case 0: return REBOOT;
-    case 1: return REBOOT_BOOTLOADER;
-    case 2: return APPLY_UPDATE;
-    case 3: return WIPE_DATA;
-    case 4: return WIPE_CACHE;
-    case 5: return WIPE_MEDIA;
-    case 6: return MOUNT_SYSTEM;
-    case 7: return VIEW_RECOVERY_LOGS;
+    case 1: return APPLY_UPDATE;
+    case 2: return WIPE_DATA;
+    case 3: return WIPE_CACHE;
+    case 4: return WIPE_MEDIA;
+    case 5: return MOUNT_SYSTEM;
+    case 6: return VIEW_RECOVERY_LOGS;
+    case 7: return SETTINGS;
     case 8: return SHUTDOWN;
     default: return NO_ACTION;
   }

@@ -31,6 +31,19 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
+LOCAL_CARBON_SRC_FILES := \
+    #libs/CarbonExtras/Battery.cpp \
+    libs/CarbonExtras/RebootMenu.cpp \
+    #libs/CarbonExtras/Settings.cpp \
+    #libs/CarbonExtras/Storage.cpp \
+    #libs/CarbonExtras/Tests.cpp \
+    #libs/CarbonExtras/Themes.cpp \
+    #libs/CarbonExtras/ThemeVar.cpp \
+    #libs/CarbonExtras/Util.cpp \
+    #libs/CarbonExtras/ZipSig.cpp \
+    libs/CarbonExtras/iniparser/iniparser.c \
+    libs/CarbonExtras/iniparser/dictionary.c
+    
 LOCAL_SRC_FILES := \
     adb_install.cpp \
     asn1_decoder.cpp \
@@ -45,7 +58,8 @@ LOCAL_SRC_FILES := \
     ui.cpp \
     verifier.cpp \
     wear_ui.cpp \
-    voldclient.cpp
+    voldclient.cpp \
+    $(LOCAL_CARBON_SRC_FILES)
 
 # External tools
 LOCAL_SRC_FILES += \
