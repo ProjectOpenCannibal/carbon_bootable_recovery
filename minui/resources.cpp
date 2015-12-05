@@ -55,7 +55,7 @@ static int open_theme_png(const char* name, const char* themename, png_structp* 
     size_t bytesRead;
     
     if (*name != '/') {
-        snprintf(resPath, sizeof(resPath), "/cache/cot/themes/%s/%s.png", themename, name);
+        snprintf(resPath, sizeof(resPath), "/cache/carbonrecovery/themes/%s/%s.png", themename, name);
     } else {
         strlcpy(resPath, name, sizeof(resPath));
     }
