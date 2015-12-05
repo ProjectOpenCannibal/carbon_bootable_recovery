@@ -341,13 +341,10 @@ really_install_package(const char *path, bool* wipe_cache, bool needs_mount)
         int ZipSetting = Settings::GetInt("settings:zip_sigverif", 1);
         if (ZipSetting != 0) {
             sysReleaseMap(&map);
-            LOGE("\nIf you want to install untrusted packages, please\n
-            disable signature verification in Settings\n");
+            LOGE("\nIf you want to install untrusted packages, please\ndisable signature verification in Settings\n");
             return INSTALL_CORRUPT;
         } else {
-            LOGI("\nWe couldn't verify the package signature, but you have\n
-            disabled signature verification in Settings. Please note that\n
-            this package is untrusted and will be installed anyway.\n");
+            LOGI("\nWe couldn't verify the package signature, but you have\ndisabled signature verification in Settings. Please note that\nthis package is untrusted and will be installed anyway.\n");
         }
     }
 
