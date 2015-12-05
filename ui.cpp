@@ -174,6 +174,10 @@ static void* InputThreadLoop(void*) {
     return nullptr;
 }
 
+void RecoveryUI::ResetIcons() {}
+
+void RecoveryUI::InitIcons() {}
+
 void RecoveryUI::Init() {
     calibrate_swipe();
     ev_init(InputCallback, this);

@@ -29,6 +29,9 @@ class ScreenRecoveryUI : public RecoveryUI {
   public:
     ScreenRecoveryUI();
 
+    void ResetIcons();
+    void InitIcons();
+    
     void Init();
     void SetLocale(const char* locale);
 
@@ -171,9 +174,9 @@ class ScreenRecoveryUI : public RecoveryUI {
     void DrawTextLine(int* y, const char* line, bool bold);
     void DrawTextLines(int* y, const char* const* lines);
 
-    void LoadBitmap(const char* filename, GRSurface** surface);
-    void LoadBitmapArray(const char* filename, int* frames, GRSurface*** surface);
-    void LoadLocalizedBitmap(const char* filename, GRSurface** surface);
+    void LoadBitmap(const char* filename, GRSurface** surface, const char* theme_name);
+    void LoadBitmapArray(const char* filename, int* frames, GRSurface*** surface, const char* theme_name);
+    void LoadLocalizedBitmap(const char* filename, GRSurface** surface, const char* theme_name);
 
     void OMGRainbows();
 };
