@@ -285,6 +285,17 @@ static const char* LONG_PRESS_HELP[] = {
     NULL
 };
 
+int ScreenRecoveryUI::draw_battery_icon()
+{
+    GRSurface* surface = batteryIcon;
+    int bw = battery_width_;
+    int bh = battery_height_;
+    int bx = ThemeVar::BatteryXPos;
+    int by = ThemeVar::BatteryYPos;
+    gr_blit(surface, 0, 0, bw, bh, bx, by);
+    return bh;
+}
+
 int ScreenRecoveryUI::draw_header_icon()
 {
     GRSurface* surface = headerIcon;
@@ -326,6 +337,12 @@ void ScreenRecoveryUI::draw_dialog()
        return;
     }
     draw_header_icon();
+
+    if (ThemeVar::BatteryIndicator.compare("true") == 0) {
+        Battery::SetLevel();
+        LoadBitmap(ThemeVar::BatteryLevel.c_str(), &batteryIcon, ThemeVar::CurrentTheme.c_str());
+        draw_battery_icon();
+    }
 
     int iconHeight = gr_get_height(backgroundIcon[dialog_icon]);
 
@@ -412,6 +429,13 @@ void ScreenRecoveryUI::draw_screen_locked() {
 
         if (show_menu) {
             draw_header_icon();
+
+            if (ThemeVar::BatteryIndicator.compare("true") == 0) {
+                Battery::SetLevel();
+                LoadBitmap(ThemeVar::BatteryLevel.c_str(), &batteryIcon, ThemeVar::CurrentTheme.c_str());
+                draw_battery_icon();
+            }
+
             int nr_items = menu_items - menu_show_start_;
             if (nr_items > max_menu_rows_)
                 nr_items = max_menu_rows_;
