@@ -22,7 +22,7 @@
 
 void Storage::MountCache() {
     ensure_path_mounted("/cache");
-    EnsureDirectoryExists("/cache/cot/themes");
+    EnsureDirectoryExists("/cache/carbonrecovery/themes");
 }
 
 void Storage::UnmountCache() {

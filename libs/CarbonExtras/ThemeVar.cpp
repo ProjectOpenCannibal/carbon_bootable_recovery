@@ -25,9 +25,10 @@ extern RecoveryUI* ui;
 /* global vars */
 string ThemeVar::CurrentTheme("default");
 int ThemeVar::C_HEADER[4] = { 111, 111, 111, 255 };
-int ThemeVar::C_TOP[4] = { 208, 208, 208, 255};
+int ThemeVar::C_INFO[4] = { 249, 194, 0, 255 };
 int ThemeVar::C_MENU_SEL_FG[4] = { 25, 160, 210, 255 };
 int ThemeVar::C_MENU_SEL_BG[4] = { 60, 60, 61, 255 };
+int ThemeVar::C_MENU_SEL_BG_ACTIVE[4] = { 138, 135, 134, 255 };
 int ThemeVar::C_LOG[4] = { 76, 76, 76, 255 };
 int ThemeVar::C_TEXT_FILL[4] = { 0, 0, 0, 255 };
 int ThemeVar::C_ERROR_TEXT[4] = { 255, 0, 0, 255 };

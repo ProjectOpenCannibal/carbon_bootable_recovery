@@ -15,5 +15,5 @@
 * limitations under the License.
 */
 
-#define COT_SETTINGS_LOC "/cache/cot/settings.ini"
-#define COT_THEMES_LOC "/cache/cot/themes/"
+#define COT_SETTINGS_LOC "/cache/carbonrecovery/settings.ini"
+#define COT_THEMES_LOC "/cache/carbonrecovery/themes/"

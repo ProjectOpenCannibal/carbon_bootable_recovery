@@ -101,10 +101,10 @@ void Themes::Load(const char *themename) {
     ThemeVar::C_HEADER[2] = iniparser_getint(ThemeDict, "theme:header_b", 111);
     ThemeVar::C_HEADER[3] = iniparser_getint(ThemeDict, "theme:header_a", 255);
 
-    ThemeVar::C_TOP[0] = iniparser_getint(ThemeDict, "theme:top_r", 208);
-    ThemeVar::C_TOP[1] = iniparser_getint(ThemeDict, "theme:top_g", 208);
-    ThemeVar::C_TOP[2] = iniparser_getint(ThemeDict, "theme:top_b", 208);
-    ThemeVar::C_TOP[3] = iniparser_getint(ThemeDict, "theme:top_a", 255);
+    ThemeVar::C_INFO[0] = iniparser_getint(ThemeDict, "theme:info_r", 249);
+    ThemeVar::C_INFO[1] = iniparser_getint(ThemeDict, "theme:info_g", 194);
+    ThemeVar::C_INFO[2] = iniparser_getint(ThemeDict, "theme:info_b", 0);
+    ThemeVar::C_INFO[3] = iniparser_getint(ThemeDict, "theme:info_a", 255);
 
     ThemeVar::C_MENU_SEL_FG[0] = iniparser_getint(ThemeDict, "theme:menufg_r", 25);
     ThemeVar::C_MENU_SEL_FG[1] = iniparser_getint(ThemeDict, "theme:menufg_g", 160);
@@ -115,6 +115,11 @@ void Themes::Load(const char *themename) {
     ThemeVar::C_MENU_SEL_BG[1] = iniparser_getint(ThemeDict, "theme:menubg_g", 60);
     ThemeVar::C_MENU_SEL_BG[2] = iniparser_getint(ThemeDict, "theme:menubg_b", 61);
     ThemeVar::C_MENU_SEL_BG[3] = iniparser_getint(ThemeDict, "theme:menubg_a", 255);
+    
+    ThemeVar::C_MENU_SEL_BG_ACTIVE[0] = iniparser_getint(ThemeDict, "theme:menubg_active_r", 138);
+    ThemeVar::C_MENU_SEL_BG_ACTIVE[1] = iniparser_getint(ThemeDict, "theme:menubg_active_g", 135);
+    ThemeVar::C_MENU_SEL_BG_ACTIVE[2] = iniparser_getint(ThemeDict, "theme:menubg_active_b", 134);
+    ThemeVar::C_MENU_SEL_BG_ACTIVE[3] = iniparser_getint(ThemeDict, "theme:menubg_active_a", 255);
 
     ThemeVar::C_LOG[0] = iniparser_getint(ThemeDict, "theme:log_r", 76);
     ThemeVar::C_LOG[1] = iniparser_getint(ThemeDict, "theme:log_g", 76);
@@ -150,7 +155,7 @@ void Themes::List(Device *device) {
     static const char* headers[] = {"Choose Theme","",NULL};
     DIR* d;
     struct dirent* de;
-    string BasePath("/cache/cot/themes");
+    string BasePath("/cache/carbonrecovery/themes");
     d = opendir(BasePath.c_str());
     if (d == NULL) {
         LOGE("error opening %s: %s\n", BasePath.c_str(), strerror(errno));

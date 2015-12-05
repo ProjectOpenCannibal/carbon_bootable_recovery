@@ -30,9 +30,10 @@ public:
     static string CurrentTheme;
     static string ThemePath;
     static int C_HEADER[4];
-    static int C_TOP[4];
+    static int C_INFO[4];
     static int C_MENU_SEL_FG[4];
     static int C_MENU_SEL_BG[4];
+    static int C_MENU_SEL_BG_ACTIVE[4];
     static int C_LOG[4];
     static int C_TEXT_FILL[4];
     static int C_ERROR_TEXT[4];

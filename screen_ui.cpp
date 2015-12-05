@@ -199,32 +199,59 @@ void ScreenRecoveryUI::draw_progress_locked() {
 void ScreenRecoveryUI::SetColor(UIElement e) {
     switch (e) {
         case INFO:
-            gr_color(249, 194, 0, 255);
+            gr_color(ThemeVar::C_INFO[0],
+                     ThemeVar::C_INFO[1],
+                     ThemeVar::C_INFO[2],
+                     ThemeVar::C_INFO[3]);
             break;
-        case HEADER:
-            gr_color(247, 0, 6, 255);
+         case HEADER:
+            gr_color(ThemeVar::C_HEADER[0],
+                     ThemeVar::C_HEADER[1],
+                     ThemeVar::C_HEADER[2],
+                     ThemeVar::C_HEADER[3]);
             break;
         case MENU:
+        case MENU_SEL_FG:
+            gr_color(ThemeVar::C_MENU_SEL_FG[0],
+                     ThemeVar::C_MENU_SEL_FG[1],
+                     ThemeVar::C_MENU_SEL_FG[2],
+                     ThemeVar::C_MENU_SEL_FG[3]);
+            break;
         case MENU_SEL_BG:
-            gr_color(106, 103, 102, 255);
+            gr_color(ThemeVar::C_MENU_SEL_BG[0],
+                     ThemeVar::C_MENU_SEL_BG[1],
+                     ThemeVar::C_MENU_SEL_BG[2],
+                     ThemeVar::C_MENU_SEL_BG[3]);
             break;
         case MENU_SEL_BG_ACTIVE:
-            gr_color(138, 135, 134, 255);
-            break;
-        case MENU_SEL_FG:
-            gr_color(0, 177, 229, 255);
+            gr_color(ThemeVar::C_MENU_SEL_BG_ACTIVE[0],
+                     ThemeVar::C_MENU_SEL_BG_ACTIVE[1],
+                     ThemeVar::C_MENU_SEL_BG_ACTIVE[2],
+                     ThemeVar::C_MENU_SEL_BG_ACTIVE[3]);
             break;
         case LOG:
-            gr_color(196, 196, 196, 255);
+            gr_color(ThemeVar::C_LOG[0],
+                     ThemeVar::C_LOG[1],
+                     ThemeVar::C_LOG[2],
+                     ThemeVar::C_LOG[3]);
             break;
         case TEXT_FILL:
-            gr_color(0, 0, 0, 160);
+            gr_color(ThemeVar::C_TEXT_FILL[0],
+                     ThemeVar::C_TEXT_FILL[1],
+                     ThemeVar::C_TEXT_FILL[2],
+                     ThemeVar::C_TEXT_FILL[3]);
             break;
         case ERROR_TEXT:
-            gr_color(255, 0, 0, 255);
+            gr_color(ThemeVar::C_ERROR_TEXT[0],
+                     ThemeVar::C_ERROR_TEXT[1],
+                     ThemeVar::C_ERROR_TEXT[2],
+                     ThemeVar::C_ERROR_TEXT[3]);
             break;
         default:
-            gr_color(255, 255, 255, 255);
+            gr_color(ThemeVar::C_DEFAULT[0],
+                     ThemeVar::C_DEFAULT[1],
+                     ThemeVar::C_DEFAULT[2],
+                     ThemeVar::C_DEFAULT[3]);
             break;
     }
 }
