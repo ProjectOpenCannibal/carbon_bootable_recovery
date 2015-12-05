@@ -59,6 +59,7 @@ extern "C" {
 #include "recovery_cmds.h"
 }
 
+#include "libs/CarbonExtras/Settings.h"
 #include "libs/CarbonExtras/RebootMenu.h"
 
 struct selabel_handle *sehandle;
@@ -1071,6 +1072,20 @@ prompt_and_wait(Device* device, int status) {
                     break;
 
                 case Device::REBOOT:
+                {
+                    int reboot_action = RebootMenu::StartMenu(device);
+                    switch (reboot_action) {
+                        case REBOOTMENU_MAIN:
+                            return Device::REBOOT;
+                        case REBOOTMENU_RECOVERY:
+                            return Device::REBOOT_RECOVERY;
+                        case REBOOTMENU_BOOTLOADER:
+                            return Device::REBOOT_BOOTLOADER;
+                        default:break;
+                    }
+                    break;
+                }
+                
                 case Device::SHUTDOWN:
                 case Device::REBOOT_BOOTLOADER:
                     return chosen_action;
@@ -1088,6 +1103,10 @@ prompt_and_wait(Device* device, int status) {
                 case Device::WIPE_MEDIA:
                     wipe_media(ui->IsTextVisible(), device);
                     if (!ui->IsTextVisible()) return Device::NO_ACTION;
+                    break;
+                    
+                case Device::SETTINGS:
+                    Settings::StartMenu(device);
                     break;
 
                 case Device::APPLY_UPDATE:
@@ -1362,6 +1381,8 @@ main(int argc, char **argv) {
 
     ui->SetLocale(locale);
     ui->Init();
+    
+    Settings::Load();
 
     int st_cur, st_max;
     if (stage != NULL && sscanf(stage, "%d/%d", &st_cur, &st_max) == 2) {

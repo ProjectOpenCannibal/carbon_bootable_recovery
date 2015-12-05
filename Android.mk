@@ -32,15 +32,15 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_CARBON_SRC_FILES := \
-    #libs/CarbonExtras/Battery.cpp \
+    libs/CarbonExtras/Battery.cpp \
     libs/CarbonExtras/RebootMenu.cpp \
-    #libs/CarbonExtras/Settings.cpp \
-    #libs/CarbonExtras/Storage.cpp \
-    #libs/CarbonExtras/Tests.cpp \
-    #libs/CarbonExtras/Themes.cpp \
-    #libs/CarbonExtras/ThemeVar.cpp \
-    #libs/CarbonExtras/Util.cpp \
-    #libs/CarbonExtras/ZipSig.cpp \
+    libs/CarbonExtras/Settings.cpp \
+    libs/CarbonExtras/Storage.cpp \
+    libs/CarbonExtras/Tests.cpp \
+    libs/CarbonExtras/Themes.cpp \
+    libs/CarbonExtras/ThemeVar.cpp \
+    libs/CarbonExtras/Util.cpp \
+    libs/CarbonExtras/ZipSig.cpp \
     libs/CarbonExtras/iniparser/iniparser.c \
     libs/CarbonExtras/iniparser/dictionary.c
     
