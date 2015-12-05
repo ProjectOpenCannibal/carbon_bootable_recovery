@@ -845,6 +845,37 @@ void ScreenRecoveryUI::StartMenu(const char* const * headers, const char* const 
     pthread_mutex_unlock(&updateMutex);
 }
 
+int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs /* = false */) {
+    #define SCROLL_DOWN 1
+    #define SCROLL_UP 0
+    int old_sel;
+    pthread_mutex_lock(&updateMutex);
+    if (abs) {
+        sel += menu_show_start_;
+    }
+    if (show_menu > 0) {
+        old_sel = menu_sel;
+        menu_sel = sel;
+        if (direction == SCROLL_DOWN) {
+            if (menu_show_start_ > 0) {
+                menu_show_start_ = menu_show_start_ - 1;
+            }
+        }
+        if (direction == SCROLL_UP) {
+            int diff = menu_items - max_menu_rows_;
+            if (menu_items >= max_menu_rows_) {
+                if (menu_show_start_ < diff) {
+                    menu_show_start_ = menu_show_start_ + 1;
+                }
+            }
+        }
+        sel = menu_sel;
+        update_screen_locked();
+    }
+    pthread_mutex_unlock(&updateMutex);
+    return sel;
+}
+
 int ScreenRecoveryUI::SelectMenu(int sel, bool abs /* = false */) {
     int wrapped = 0;
     pthread_mutex_lock(&updateMutex);
@@ -855,14 +886,6 @@ int ScreenRecoveryUI::SelectMenu(int sel, bool abs /* = false */) {
         int old_sel = menu_sel;
         menu_sel = sel;
 
-        // Wrap at top and bottom.
-        if (rainbow) {
-            if (menu_sel > old_sel) {
-                move_rainbow(1);
-            } else if (menu_sel < old_sel) {
-                move_rainbow(-1);
-            }
-        }
         if (menu_sel < 0) {
             wrapped = -1;
             menu_sel = menu_items + menu_sel;
@@ -886,7 +909,7 @@ int ScreenRecoveryUI::SelectMenu(int sel, bool abs /* = false */) {
             }
             if (wrap_count / wrapped >= 5) {
                 wrap_count = 0;
-                OMGRainbows();
+                //OMGRainbows();
             }
         }
         if (menu_sel != old_sel) update_screen_locked();

@@ -95,6 +95,8 @@ class Device : public VoldWatcher {
     static const int kInvokeItem = -4;
     static const int kGoBack = -5;
     static const int kRefresh = -6;
+    static const int kScrollUp = -7;
+    static const int kScrollDown = -8;
 
     // Called before and after we do a wipe data/factory reset operation,
     // either via a reboot from the main system with the --wipe_data flag,
