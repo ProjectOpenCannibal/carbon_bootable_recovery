@@ -465,24 +465,42 @@ void ScreenRecoveryUI::ProgressThreadLoop() {
     }
 }
 
-void ScreenRecoveryUI::LoadBitmap(const char* filename, GRSurface** surface) {
-    int result = res_create_display_surface(filename, surface);
+void ScreenRecoveryUI::LoadBitmap(const char* filename, GRSurface** surface, const char* theme_name = "default") {
+    int result = 0;
+    if (strcmp(theme_name, "default")) {
+        result = res_create_theme_display_surface(filename, theme_name, surface);
+    } else {
+        result = res_create_display_surface(filename, surface);
+    }
     if (result < 0) {
         LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
+        res_create_display_surface(filename, surface);
     }
 }
 
-void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, GRSurface*** surface) {
-    int result = res_create_multi_display_surface(filename, frames, surface);
+void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, GRSurface*** surface, const char* theme_name = "default") {
+    int result;
+    if (strcmp(theme_name, "default")) {
+        result = res_create_theme_multi_display_surface(filename, theme_name, frames, surface);
+    } else {
+        result = res_create_multi_display_surface(filename, frames, surface);
+    }
     if (result < 0) {
         LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
+        res_create_multi_display_surface(filename, frames, surface);
     }
 }
 
-void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, GRSurface** surface) {
-    int result = res_create_localized_alpha_surface(filename, locale, surface);
+void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, GRSurface** surface, const char* theme_name = "default") {
+    int result;
+    if (strcmp(theme_name, "default")) {
+        result = res_create_theme_localized_alpha_surface(filename, theme_name, locale, surface);
+    } else {
+        result = res_create_localized_alpha_surface(filename, locale, surface);
+    }
     if (result < 0) {
         LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
+        res_create_localized_alpha_surface(filename, locale, surface);
     }
 }
 
@@ -493,6 +511,41 @@ static char** Alloc2d(size_t rows, size_t cols) {
         memset(result[i], 0, cols);
     }
     return result;
+}
+
+void ScreenRecoveryUI::ResetIcons() {
+    pthread_mutex_lock(&updateMutex);
+    ScreenRecoveryUI::InitIcons();
+    update_screen_locked();
+    pthread_mutex_unlock(&updateMutex);
+    
+    ScreenRecoveryUI::ShowText(true);
+    ScreenRecoveryUI::SetBackground(RecoveryUI::NO_COMMAND);
+}
+
+void ScreenRecoveryUI::InitIcons() {
+    LoadBitmap("icon_header", &headerIcon);
+    header_height_ = gr_get_height(headerIcon);
+    header_width_ = gr_get_width(headerIcon);
+    
+    backgroundIcon[NONE] = nullptr;
+    LoadBitmapArray("icon_installing", &installing_frames, &installation);
+    backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : nullptr;
+    backgroundIcon[ERASING] = backgroundIcon[INSTALLING_UPDATE];
+    LoadBitmap("icon_info", &backgroundIcon[D_INFO]);
+    LoadBitmap("icon_error", &backgroundIcon[D_ERROR]);
+    backgroundIcon[NO_COMMAND] = backgroundIcon[D_ERROR];
+    LoadBitmap("icon_headless", &backgroundIcon[HEADLESS]);
+
+    LoadBitmap("progress_empty", &progressBarEmpty);
+    LoadBitmap("progress_fill", &progressBarFill);
+    LoadBitmap("stage_empty", &stageMarkerEmpty);
+    LoadBitmap("stage_fill", &stageMarkerFill);
+
+    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE]);
+    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING]);
+    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND]);
+    LoadLocalizedBitmap("error_text", &backgroundText[D_ERROR]);
 }
 
 void ScreenRecoveryUI::Init() {
@@ -515,32 +568,11 @@ void ScreenRecoveryUI::Init() {
     text_col_ = text_row_ = 0;
     text_top_ = 1;
 
-    LoadBitmap("icon_header", &headerIcon);
-    header_height_ = gr_get_height(headerIcon);
-    header_width_ = gr_get_width(headerIcon);
+    ScreenRecoveryUI::InitIcons();
 
     text_first_row_ = (header_height_ / char_height_) + 1;
     menu_item_start_ = text_first_row_ * char_height_;
     max_menu_rows_ = (text_rows_ - text_first_row_) / 3;
-
-    backgroundIcon[NONE] = nullptr;
-    LoadBitmapArray("icon_installing", &installing_frames, &installation);
-    backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : nullptr;
-    backgroundIcon[ERASING] = backgroundIcon[INSTALLING_UPDATE];
-    LoadBitmap("icon_info", &backgroundIcon[D_INFO]);
-    LoadBitmap("icon_error", &backgroundIcon[D_ERROR]);
-    backgroundIcon[NO_COMMAND] = backgroundIcon[D_ERROR];
-    LoadBitmap("icon_headless", &backgroundIcon[HEADLESS]);
-
-    LoadBitmap("progress_empty", &progressBarEmpty);
-    LoadBitmap("progress_fill", &progressBarFill);
-    LoadBitmap("stage_empty", &stageMarkerEmpty);
-    LoadBitmap("stage_fill", &stageMarkerFill);
-
-    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE]);
-    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING]);
-    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND]);
-    LoadLocalizedBitmap("error_text", &backgroundText[D_ERROR]);
 
     pthread_create(&progress_thread_, nullptr, ProgressThreadStartRoutine, this);
 
