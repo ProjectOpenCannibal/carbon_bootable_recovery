@@ -18,7 +18,7 @@
 #include "ExternalFuncs.h"
 #include "Settings.h"
 #include "Storage.h"
-#include "../../libcrecovery/common.h"
+//#include "../../libcrecovery/common.h"
 
 void Storage::MountCache() {
     ensure_path_mounted("/cache");
@@ -32,7 +32,7 @@ void Storage::UnmountCache() {
 void Storage::EnsureDirectoryExists(const char *dir) {
     char tmp[1024];
     sprintf(tmp, "mkdir -p %s ; chmod 777 %s", dir, dir);
-    __system(tmp);
+    system(tmp);
 }
 
 char **Storage::GatherFiles(const char *directory, const char *fileExtensionOrDirectory, int *numFiles) {
