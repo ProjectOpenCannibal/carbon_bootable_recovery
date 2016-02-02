@@ -519,14 +519,14 @@ int format_volume(const char* volume, bool force) {
     }
 
     /*
-    We don't want to erase /cache/cot...
+    We don't want to erase /cache/carbon...
     so we do an rmtree_except instead of reformat
     */
 
     if (strcmp(volume, "/cache") && !force) {
         if (ensure_path_mounted("/cache") == 0) {
             LOGI("Preserving recovery files...\n");
-            int rc = rmtree_except("/cache", "cot");
+            int rc = rmtree_except("/cache", "carbon");
             ensure_path_unmounted(volume);
             return rc;
         }

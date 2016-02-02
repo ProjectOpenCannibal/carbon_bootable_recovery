@@ -153,7 +153,7 @@ static int open_theme_png(const char* name, const char* themename, png_structp* 
     int result = 0;
 
     if(*name != '/') {
-        snprintf(resPath, sizeof(resPath), "/cache/cot/themes/%s/%s.png", themename, name);
+        snprintf(resPath, sizeof(resPath), "/cache/carbon/themes/%s/%s.png", themename, name);
     }else{
         strlcpy(resPath,name,sizeof(resPath));
     }

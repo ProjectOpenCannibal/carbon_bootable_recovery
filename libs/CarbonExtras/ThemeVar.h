@@ -18,8 +18,8 @@
 #ifndef RECOVERY_THEMEVAR_H
 #define RECOVERY_THEMEVAR_H
 
-#define COT_SETTINGS_LOC "/cache/cot/settings.ini"
-#define COT_THEMES_LOC "/cache/cot/themes/"
+#define COT_SETTINGS_LOC "/cache/carbon/settings.ini"
+#define COT_THEMES_LOC "/cache/carbon/themes/"
 
 #include "../rdestl/rde_string.h"
 using namespace rde;

@@ -150,7 +150,7 @@ void Themes::List(Device *device) {
     static const char* headers[] = {"Choose Theme","",NULL};
     DIR* d;
     struct dirent* de;
-    string BasePath("/cache/cot/themes");
+    string BasePath("/cache/carbon/themes");
     d = opendir(BasePath.c_str());
     if (d == NULL) {
         LOGE("error opening %s: %s\n", BasePath.c_str(), strerror(errno));
