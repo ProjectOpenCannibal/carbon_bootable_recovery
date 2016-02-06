@@ -86,7 +86,9 @@ static const char* MAIN_MENU_NAMES[] = {
     "Reboot",
     "Install ZIP Package",
     "Factory Reset",
+#ifndef RELEASE_BUILD
     "Advanced",
+#endif
     nullptr
 };
 
@@ -94,7 +96,9 @@ static const menu_entry MAIN_MENU_ENTRIES[] = {
     { ACTION_INVOKE, { .action = Device::REBOOT } },
     { ACTION_INVOKE, { .action = Device::APPLY_UPDATE } },
     { ACTION_SUBMENU, { .submenu = &WIPE_MENU } },
+#ifndef RELEASE_BUILD
     { ACTION_SUBMENU, { .submenu = &ADVANCED_MENU } },
+#endif
     { ACTION_NONE, { .action = Device::NO_ACTION } }
 };
 
