@@ -19,11 +19,15 @@
 
 #include "ui.h"
 
+#include <stack>
+
 #define KEY_FLAG_ABS 0x8000
+
+struct menu;
 
 class Device : public VoldWatcher {
   public:
-    Device(RecoveryUI* ui) : ui_(ui) { }
+    explicit Device(RecoveryUI* ui);
     virtual ~Device() { }
 
     // Called to obtain the UI object that should be used to display
@@ -59,20 +63,18 @@ class Device : public VoldWatcher {
     virtual int HandleMenuKey(int key, int visible);
 
     enum BuiltinAction {
-        NO_ACTION = 0,
-        REBOOT = 1,
-        APPLY_UPDATE = 2,
-        // APPLY_CACHE was 3.
-        // APPLY_ADB_SIDELOAD was 4.
-        WIPE_DATA = 5,
-        WIPE_CACHE = 6,
-        WIPE_MEDIA = 7,
-        REBOOT_BOOTLOADER = 8,
-        REBOOT_RECOVERY = 9,
-        SETTINGS = 10,
-        SHUTDOWN = 11,
-        VIEW_RECOVERY_LOGS = 12,
-        MOUNT_SYSTEM = 13,
+        NO_ACTION,
+        REBOOT,
+        APPLY_UPDATE,
+        WIPE_DATA,
+        WIPE_FULL,
+        WIPE_CACHE,
+        REBOOT_BOOTLOADER,
+        REBOOT_RECOVERY,
+        SETTINGS,
+        SHUTDOWN,
+        VIEW_RECOVERY_LOGS,
+        MOUNT_SYSTEM,
     };
 
     // Return the list of menu items (an array of strings,
@@ -121,6 +123,8 @@ class Device : public VoldWatcher {
 
   private:
     RecoveryUI* ui_;
+    
+    std::stack<const menu*> menu_stack;
 };
 
 // The device-specific library must define this function (or the
