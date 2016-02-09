@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ifeq ($(call my-dir),$(call project-path-for,recovery))
-
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -354,4 +352,3 @@ include $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
     $(LOCAL_PATH)/fstools/Android.mk
 
-endif
