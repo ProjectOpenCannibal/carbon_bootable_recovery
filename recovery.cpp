@@ -638,6 +638,9 @@ static bool erase_volume(const char* volume, bool force = false) {
         copy_logs();
     }
 
+    ui->SetBackground(RecoveryUI::NONE);
+    ui->SetProgressType(RecoveryUI::EMPTY);
+
     return (result == 0);
 }
 
@@ -846,11 +849,19 @@ static bool wipe_data(int should_confirm, Device* device, bool force = false) {
     modified_flash = true;
 
     ui->Print("\n-- Wiping data...\n");
-    bool success =
+    bool success;
+retry:
+    success =
         device->PreWipeData() &&
         erase_volume("/data", force) &&
         erase_volume("/cache") &&
         device->PostWipeData();
+    if (!success && !force) {
+        if (!should_confirm || yes_no(device, "Wipe failed, format instead?", "  THIS CAN NOT BE UNDONE!")) {
+            force = true;
+            goto retry;
+        }
+    }
     ui->Print("Data wipe %s.\n", success ? "complete" : "failed");
     return success;
 }
@@ -1034,8 +1045,6 @@ refresh:
     return status;
 }
 
-int ui_root_menu = 0;
-
 // Return REBOOT, SHUTDOWN, or REBOOT_BOOTLOADER.  Returning NO_ACTION
 // means to take the default, which is to reboot or shutdown depending
 // on if the --shutdown_after flag was passed to recovery.
@@ -1043,7 +1052,6 @@ static Device::BuiltinAction
 prompt_and_wait(Device* device, int status) {
     for (;;) {
         finish_recovery(NULL);
-        ui_root_menu = 1;
         switch (status) {
             case INSTALL_SUCCESS:
             case INSTALL_NONE:
@@ -1058,7 +1066,6 @@ prompt_and_wait(Device* device, int status) {
         ui->SetProgressType(RecoveryUI::EMPTY);
 
         int chosen_item = get_menu_selection(nullptr, device->GetMenuItems(), 0, 0, device);
-        ui_root_menu = 0;
 
         // device-specific code may take some action here.  It may
         // return one of the core actions handled in the switch
@@ -1095,13 +1102,13 @@ prompt_and_wait(Device* device, int status) {
                     if (!ui->IsTextVisible()) return Device::NO_ACTION;
                     break;
 
-                case Device::WIPE_CACHE:
-                    wipe_cache(ui->IsTextVisible(), device);
+                case Device::WIPE_FULL:
+                    wipe_data(ui->IsTextVisible(), device, true);
                     if (!ui->IsTextVisible()) return Device::NO_ACTION;
                     break;
 
-                case Device::WIPE_MEDIA:
-                    wipe_media(ui->IsTextVisible(), device);
+                case Device::WIPE_CACHE:
+                    wipe_cache(ui->IsTextVisible(), device);
                     if (!ui->IsTextVisible()) return Device::NO_ACTION;
                     break;
                     
@@ -1344,6 +1351,7 @@ main(int argc, char **argv) {
         case 'h': headless = true; break;
         case 'w': should_wipe_data = true; break;
         case 'c': should_wipe_cache = true; break;
+        case 'm': should_wipe_media = true; break;
         case 't': show_text = true; break;
         case 's': sideload = true; break;
         case 'a': sideload = true; sideload_auto_reboot = true; break;
@@ -1502,12 +1510,8 @@ main(int argc, char **argv) {
         status = INSTALL_NONE;  // No command specified
         ui->SetBackground(RecoveryUI::NO_COMMAND);
 
-        // http://b/17489952
-        // If this is an eng or userdebug build, automatically turn on the
-        // text display if no command is specified.
-        if (is_ro_debuggable()) {
-            ui->ShowText(true);
-        }
+        // Always show menu if no command is specified
+        ui->ShowText(true);
     }
 
     if (!sideload_auto_reboot && (status == INSTALL_ERROR || status == INSTALL_CORRUPT)) {
@@ -1561,6 +1565,7 @@ main(int argc, char **argv) {
         case Device::REBOOT_RECOVERY:
             ui->Print("Rebooting to recovery...\n");
             property_set(ANDROID_RB_PROPERTY, "reboot,recovery");
+            break;
 
         default:
             char reason[PROPERTY_VALUE_MAX];

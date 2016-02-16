@@ -152,6 +152,10 @@ ifneq ($(BOARD_RECOVERY_BLDRMSG_OFFSET),)
     LOCAL_CFLAGS += -DBOARD_RECOVERY_BLDRMSG_OFFSET=$(BOARD_RECOVERY_BLDRMSG_OFFSET)
 endif
 
+ifeq ($(TARGET_BUILD_VARIANT),user)
+    LOCAL_CFLAGS += -DRELEASE_BUILD
+endif
+
 LOCAL_CFLAGS += -DUSE_EXT4 -DMINIVOLD
 LOCAL_C_INCLUDES += system/extras/ext4_utils system/core/fs_mgr/include external/fsck_msdos
 LOCAL_C_INCLUDES += system/vold
@@ -168,15 +172,13 @@ LOCAL_C_INCLUDES += external/boringssl/include
 ifeq ($(ONE_SHOT_MAKEFILE),)
 LOCAL_ADDITIONAL_DEPENDENCIES += \
     fstools \
-    recovery_mkshrc
+    recovery_mkshrc \
+    bu_recovery \
+    toybox_recovery_links
 
 endif
 
-LOCAL_ADDITIONAL_DEPENDENCIES += \
-    bu_recovery
-
 TOYBOX_INSTLIST := $(HOST_OUT_EXECUTABLES)/toybox-instlist
-LOCAL_ADDITIONAL_DEPENDENCIES += toybox_recovery_links
 
 # Set up the static symlinks
 RECOVERY_TOOLS := \
@@ -191,7 +193,7 @@ endif
 include $(BUILD_EXECUTABLE)
 
 # Run toybox-instlist and generate the rest of the symlinks
-toybox_recovery_links: $(TOYBOX_INSTLIST) recovery
+toybox_recovery_links: $(TOYBOX_INSTLIST)
 toybox_recovery_links: TOY_LIST=$(shell $(TOYBOX_INSTLIST))
 toybox_recovery_links: TOYBOX_BINARY := $(TARGET_RECOVERY_ROOT_OUT)/sbin/toybox
 toybox_recovery_links:
